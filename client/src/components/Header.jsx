@@ -1,5 +1,5 @@
 // src/components/Header.jsx
-// src/components/Header.jsx
+
 import React, { useContext, useEffect, useState } from 'react';
 import { FaSearch } from "react-icons/fa";
 import { MyContext } from '../App';

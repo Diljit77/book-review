@@ -58,35 +58,42 @@ export const getBookById = async (req, res) => {
   }
 };
 
-// POST /books - Add a new book (admin only)
+
 export const createBook = async (req, res) => {
   try {
-    // In real app, you should check if the user is admin (middleware)
-    const { title, author, price, rating, description, image } = req.body;
-
-    const newBook = new Book({ title, author, price, rating, description, image });
+    const { title, author, description, genre, year } = req.body;
+    const newBook = new Book({ title, author, description, genre, year, addedBy: req.user.id });
     const savedBook = await newBook.save();
-
-    res.status(201).json({ message: 'Book created successfully', book: savedBook });
+    res.status(201).json({ success: true, message: 'Book created successfully', book: savedBook });
   } catch (error) {
-    res.status(500).json({ message: 'Failed to create book', error });
+    res.status(500).json({ success: false, message: 'Failed to create book', error });
   }
 };
+
+
 export const updateBook = async (req, res) => {
   try {
+    const book = await Book.findById(req.params.id);
+    if (!book) return res.status(404).json({ success: false, message: 'Book not found' });
+    if (book.addedBy.toString() !== req.user.id) return res.status(403).json({ success: false, message: 'Not authorized' });
+
     const updatedBook = await Book.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!updatedBook) return res.status(404).json({ message: 'Book not found' });
-    res.status(200).json({ message: 'Book updated successfully', book: updatedBook });
+    res.status(200).json({ success: true, message: 'Book updated successfully', book: updatedBook });
   } catch (error) {
-    res.status(500).json({ message: 'Failed to update book', error });
+    res.status(500).json({ success: false, message: 'Failed to update book', error });
   }
 };
+
+// DELETE /books/:id
 export const deleteBook = async (req, res) => {
   try {
-    const deletedBook = await Book.findByIdAndDelete(req.params.id);
-    if (!deletedBook) return res.status(404).json({ message: 'Book not found' });
-    res.status(200).json({ message: 'Book deleted successfully' });
+    const book = await Book.findById(req.params.id);
+    if (!book) return res.status(404).json({ success: false, message: 'Book not found' });
+    if (book.addedBy.toString() !== req.user.id) return res.status(403).json({ success: false, message: 'Not authorized' });
+
+    await book.deleteOne();
+    res.status(200).json({ success: true, message: 'Book deleted successfully' });
   } catch (error) {
-    res.status(500).json({ message: 'Failed to delete book', error });
+    res.status(500).json({ success: false, message: 'Failed to delete book', error });
   }
 };

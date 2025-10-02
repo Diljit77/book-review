@@ -4,6 +4,7 @@ import {
   addReview,
   getReviewByuser
 } from "../controller/Reviewcontroller.js";
+import { verifyToken } from '../middleware/auth.js';
 
 const router = express.Router();
 router.get("/user",getReviewByuser);
@@ -11,7 +12,7 @@ router.get("/user",getReviewByuser);
 router.get('/', getReviews);
 
 
-router.post('/', addReview);
+router.post('/',verifyToken, addReview);
 
 
 export default router;

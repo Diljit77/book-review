@@ -25,22 +25,19 @@ export const getReviewByuser = async (req, res) => {
   }
 };
 
-// POST /reviews - Add a new review
+
 export const addReview = async (req, res) => {
   try {
-    const { user, book, comment, rating } = req.body;
-    if (!user || !book || !comment || !rating) {
-      return res.status(400).json({ message: 'All fields are required' ,success:false});
-    }
+    const { book, comment, rating } = req.body;
+    const user = req.user.id; 
 
-    const bookExists = await Book.findById(book);
-    if (!bookExists) return res.status(404).json({ message: 'Book not found', success:false });
+    if (!book || !comment || !rating) return res.status(400).json({ success: false, message: 'All fields are required' });
 
     const newReview = new Review({ user, book, comment, rating });
     const savedReview = await newReview.save();
 
-    res.status(201).json({ message: 'Review added successfully', success:true, review: savedReview });
+    res.status(201).json({ success: true, message: 'Review added', review: savedReview });
   } catch (error) {
-    res.status(500).json({ message: 'Failed to add review', success:false, error:error });
+    res.status(500).json({ success: false, message: 'Failed to add review', error });
   }
 };
