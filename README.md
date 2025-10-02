@@ -12,6 +12,10 @@ Users can browse books, search, filter, add reviews, and view book details. Admi
 -  User profile with personal review history
 
 ---
+## 🌐 Live Demo 
+https://book-review-taupe.vercel.app/
+
+---
 
 ## 📦 Tech Stack
 
@@ -64,17 +68,5 @@ npm run dev
 
 ---
 
-## 🌐 Live Demo (if hosted)
-
-https://book-review-taupe.vercel.app/
-
----
-
-## 📌 Notes
-
-- You must have MongoDB Atlas or local MongoDB running
-- Ensure the backend and frontend run on different ports (`5000` & `5173`)
-- Update API URLs if using a hosted backend
-
----
-
+### Developed By
+Daljit Singh
